@@ -22,17 +22,18 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
+                    child: GestureDetector(
+              onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchScreen()));
+            },
+                   child: Container(
                       height: 42,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: GestureDetector(
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchScreen()));
-                        },
+
                         child: const Row(
                           children: [
                             Icon(Icons.search, color: Colors.grey),
@@ -42,8 +43,9 @@ class HomeScreen extends StatelessWidget {
                             Icon(Icons.tune,color: Colors.grey),
                           ],
                         ),
-                      )
+
                     ),
+                  ),
                   ),
                   SizedBox(width: 15,),
                   Image.asset(
