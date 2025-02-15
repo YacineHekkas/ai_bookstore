@@ -1,4 +1,12 @@
+import 'package:ai_bookstore/controller/collection_provider.dart';
+import 'package:ai_bookstore/view/screens/chat_screen.dart';
+import 'package:ai_bookstore/view/screens/collection_screen.dart';
+import 'package:ai_bookstore/view/screens/favorite_screen.dart';
+import 'package:ai_bookstore/view/screens/profil_screen.dart';
+import 'package:ai_bookstore/view/screens/search_screen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'home_screen.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -9,15 +17,17 @@ class MainNavigation extends StatefulWidget {
 }
 
 class _MainNavigationState extends State<MainNavigation> {
+
+
   int _selectedIndex = 0;
 
   // List of pages to show in bottom navigation
   final List<Widget> _pages = [
     const HomeScreen(),
-    const Placeholder(),
-    const Placeholder(),
-    const Placeholder(),
-    const Placeholder(),
+    const ChatScreen(),
+    const CollectionsScreen(),
+    const FavoritesScreen(),
+    const ProfileSettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -30,31 +40,20 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'All Books',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.collections_bookmark),
-            label: 'Collections',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Favorite',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
-          ),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _selectedIndex, // Set the current index
+        onTap: _onItemTapped, // Handle item tap
+        backgroundColor: Colors.transparent, // Background color of the bar
+        color: Color(0xffCE7B81), // Color of the bar
+        buttonBackgroundColor: Color(0xffCE7B81), // Background color of the selected button
+        height: 60, // Height of the navigation bar
+        animationDuration: const Duration(milliseconds: 300), // Animation duration
+        items: <Widget>[
+          SvgPicture.asset('assets/icons/home.svg', width: 24, height: 24, color: Colors.white),
+          SvgPicture.asset('assets/icons/aibot.svg', width: 24, height: 24, color: Colors.white),
+          SvgPicture.asset('assets/icons/apps.svg', width: 24, height: 24, color: Colors.white),
+          SvgPicture.asset('assets/icons/vector.svg', width: 24, height: 24, color: Colors.white),
+          SvgPicture.asset('assets/icons/profile.svg', width: 24, height: 24, color: Colors.white),
         ],
       ),
     );

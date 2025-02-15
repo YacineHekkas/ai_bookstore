@@ -1,6 +1,11 @@
+import 'package:ai_bookstore/view/screens/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../controller/book_provider.dart';
+import '../../model/book.dart';
 import '../widget/ship.dart';
+import 'book_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -24,21 +29,26 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.search, color: Colors.grey),
-                          SizedBox(width: 8),
-                          Text('Search', style: TextStyle(color: Colors.grey)),
-                          SizedBox(width: 100),
-                          Icon(Icons.filter_alt_outlined, color: Colors.grey),
-                        ],
-                      ),
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchScreen()));
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(Icons.search, color: Colors.grey),
+                            SizedBox(width: 8),
+                            Text('Search', style: TextStyle(color: Colors.grey)),
+                            SizedBox(width: 132),
+                            Icon(Icons.tune,color: Colors.grey),
+                          ],
+                        ),
+                      )
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  const Icon(Icons.settings_outlined),
-                  const SizedBox(width: 16),
-                  const Icon(Icons.notifications_outlined),
+                  SizedBox(width: 15,),
+                  Image.asset(
+                    "assets/images/Button.png"
+                  )
                 ],
               ),
             ),
@@ -170,25 +180,30 @@ class HomeScreen extends StatelessWidget {
                     ),
                     SizedBox(
                       height: 40,
-                      child:                           CategoryChipsList(),
+                      child:CategoryChipsList(),
 
                     ),
-                    // Grid of Books
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.all(16),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.5,
-                        crossAxisSpacing: 6,
-                        mainAxisSpacing: 16,
-                      ),
-                      itemCount: 8,
-                      itemBuilder: (context, index) {
-                        return BookCard();
+                    Consumer<BooksProvider>(
+                      builder: (context, booksProvider, child) {
+                        final books = booksProvider.books;
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(16),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.5,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          itemCount: books.length,
+                          itemBuilder: (context, index) {
+                            return BookCard(book: books[index]);
+                          },
+                        );
                       },
                     ),
+                    // Grid of Books
                   ],
                 ),
               ),
@@ -201,46 +216,61 @@ class HomeScreen extends StatelessWidget {
 }
 
 
+
 class BookCard extends StatelessWidget {
-  const BookCard({Key? key}) : super(key: key);
+  final Book book;
+
+  const BookCard({
+    Key? key,
+    required this.book,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              "assets/images/img_2.png",
-              fit: BoxFit.cover,
-              width: 200,
-              height: 300,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookDetailsScreen(bookId: book.id),
+          ),
+        );
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                book.imageUrl,
+                fit: BoxFit.cover,
+                width: 200,
+                height: 300,
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Book Title',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+          const SizedBox(height: 8),
+          Text(
+            book.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const Text(
-          'Author Name',
-          style: TextStyle(
-            color: Colors.grey,
+          Text(
+            book.author,
+            style: const TextStyle(
+              color: Colors.grey,
+            ),
           ),
-        ),
-        const Text(
-          '\$9.99',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+          Text(
+            '\$${book.price.toStringAsFixed(2)}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
